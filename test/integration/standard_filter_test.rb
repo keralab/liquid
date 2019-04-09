@@ -691,6 +691,12 @@ class StandardFiltersTest < Minitest::Test
     assert_equal ["54", "65", "73", "74", "69", "6e", "67"], @filters.to_hex([84, 101, 115, 116, 105, 110, 103])
   end
 
+  def test_lambda_expr
+    assert_equal 2, @filters.lambda_expr([1,2,3,4,5], '[:x,1]', "y[x]")
+    assert_equal ["Str", "ing"], @filters.lambda_expr("Str-ing",'[y,-]', "str.split(y)")
+    assert_equal 6, @filters.lambda_expr([1,2,3,4,5], '[:xy,1],[:kb,2]', 'yx[xy]*yx[kb]')
+  end
+
   def test_cannot_access_private_methods
     assert_template_result('a', "{{ 'a' | to_number }}")
   end

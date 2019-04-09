@@ -437,6 +437,43 @@ module Liquid
       input.map{ |c| c.to_s(16) }
     end
 
+    def lambda_expr(input, x, expr)
+      inputlist = x.scan(/(?:\[.*?\]|[^,])+/)
+      inputhash = {}
+      for element in inputlist
+        newinput = element.tr('[]','').split(',')
+        inputhash[newinput[0]] = newinput[1]
+      end
+    
+      counter = 0
+      while(counter != inputhash.size())
+        if(expr.include? inputhash.keys[counter].tr(':',''))
+          isnum = /^\d+$/.match(inputhash.values[counter])
+          if(isnum.to_s.length == inputhash.values[counter].length)
+            expr = expr.gsub(expr[inputhash.keys[counter].tr(':','')], inputhash.values[counter].to_s)
+          else
+            rep = inputhash.values[counter]
+            expr = expr.gsub(expr[inputhash.keys[counter].tr(':','')], %('#{rep}') )
+          end
+        end
+        counter = counter + 1
+    
+      end
+        
+      if /[a-zA-Z]*/.match(expr)
+        if input.class == String
+          expr = expr.gsub(expr[/[a-zA-Z]+/], %("#{input}"))
+        elsif input.class == Array
+          input = "[#{input.join(",")}]"
+          expr = expr.gsub(/[a-zA-Z]+/,  %(#{input}))
+        else
+          expr = expr.gsub(/[a-zA-Z]+/,  %(#{input}))
+        end
+      end
+    
+      eval(expr)
+    end
+
     private
 
     def raise_property_error(property)
