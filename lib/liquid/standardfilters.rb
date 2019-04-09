@@ -447,13 +447,13 @@ module Liquid
     
       counter = 0
       while(counter != inputhash.size())
-        if(expr.include? inputhash.keys[counter].tr(':',''))
+        if(expr.include? inputhash.keys[counter])
           isnum = /^\d+$/.match(inputhash.values[counter])
           if(isnum.to_s.length == inputhash.values[counter].length)
-            expr = expr.gsub(expr[inputhash.keys[counter].tr(':','')], inputhash.values[counter].to_s)
+            expr = expr.gsub(expr[inputhash.keys[counter]], inputhash.values[counter].to_s)
           else
             rep = inputhash.values[counter]
-            expr = expr.gsub(expr[inputhash.keys[counter].tr(':','')], %('#{rep}') )
+            expr = expr.gsub(expr[inputhash.keys[counter]], %('#{rep}') )
           end
         end
         counter = counter + 1
