@@ -692,9 +692,9 @@ class StandardFiltersTest < Minitest::Test
   end
 
   def test_lambda_expr
-    assert_equal 2, @filters.lambda_expr([1,2,3,4,5], '[:x,1]', "y[x]")
-    assert_equal ["Str", "ing"], @filters.lambda_expr("Str-ing",'[y,-]', "str.split(y)")
-    assert_equal 6, @filters.lambda_expr([1,2,3,4,5], '[:xy,1],[:kb,2]', 'yx[xy]*yx[kb]')
+    assert_equal 2, @filters.lambda_expr([1,2,3,4,5], 'x, 1', "y[x]")
+    assert_equal 3, @filters.lambda_expr("Str-ing",'y, -', "str.index(y)")
+    assert_equal 6, @filters.lambda_expr([1,2,3,4,5], 'one, 1', 'two,2', 'input[one]*input[two]')
   end
 
   def test_cannot_access_private_methods
