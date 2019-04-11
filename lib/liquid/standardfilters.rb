@@ -434,7 +434,16 @@ module Liquid
 
     #Convert to hexadecimal
     def to_hex(input)
-      input.map{ |c| c.to_s(16) }
+      if input.class == String
+        input.to_i.to_s(16)
+      elsif input.class == Array 
+        if input.all? { |x| x.is_a? String } 
+          input = input.map{ |c| c.to_i }
+        end
+        input.map{ |c| c.to_s(16) }
+      end
+      
+      
     end
 
     def lambda_expr(input, *x, expr)
