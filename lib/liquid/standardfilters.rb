@@ -442,7 +442,7 @@ module Liquid
      inputhash = {}
      # x parameters are in string form which must be split into a hash for easier parsing
      for i in x
-        inputhash.merge!(Hash[*i.split(',')])
+        inputhash.merge!(Hash[*(i.split(",").map(&:strip))])
      end
 
      #the corresponding variables in the expr are replaced with its respective value from the hashed parameters
@@ -460,7 +460,6 @@ module Liquid
 
       counter = counter + 1
      end
-
      #any variables that have not be replaced are assumed to be the input and replaced with the respective value
      if /[a-zA-Z]*/.match(expr)
       if input.class == String
