@@ -689,6 +689,9 @@ class StandardFiltersTest < Minitest::Test
 
   def test_to_hex
     assert_equal ["54", "65", "73", "74", "69", "6e", "67"], @filters.to_hex([84, 101, 115, 116, 105, 110, 103])
+    assert_equal "a", @filters.to_hex(10)
+    assert_equal "a", @filters.to_hex('10')
+    assert_equal ["54", "65", "73", "74", "69", "6e", "67"], @filters.to_hex(["84", "101", "115", "116", "105", "110", "103"])
   end
 
   def test_lambda_expr

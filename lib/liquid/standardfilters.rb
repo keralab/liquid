@@ -438,9 +438,12 @@ module Liquid
         input.to_i.to_s(16)
       elsif input.class == Array 
         if input.all? { |x| x.is_a? String } 
-          input = input.map{ |c| c.to_i }
+          input = input.map{ |c| c.to_i.to_s(16) }
+        else
+          input = input.map{ |c| c.to_s(16) }
         end
-        input.map{ |c| c.to_s(16) }
+      else
+        input.to_s(16)
       end
     end
 
