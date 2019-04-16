@@ -437,6 +437,48 @@ module Liquid
       input.map{ |c| c.to_s(16) }
     end
 
+    def lambda_expr(input, *x, expr)
+      #*x is an array that contains an arbitrary number of parameters 
+     inputhash = {}
+     # x parameters are in string form which must be split into a hash for easier parsing
+     for i in x
+        inputhash.merge!(Hash[*(i.split(",").map(&:strip))])
+     end
+
+     #the corresponding variables in the expr are replaced with its respective value from the hashed parameters
+     counter = 0
+     while(counter != inputhash.size())
+      if(expr.include? inputhash.keys[counter])
+        isnum = /^\d+$/.match(inputhash.values[counter])
+        if(isnum.to_s.length == inputhash.values[counter].length)
+          expr = expr.gsub(expr[inputhash.keys[counter]], inputhash.values[counter].to_s)
+        else
+          rep = inputhash.values[counter]
+          expr = expr.gsub(expr[inputhash.keys[counter]], %('#{rep}') )
+        end 
+      end
+
+      counter = counter + 1
+     end
+     #any variables that have not be replaced are assumed to be the input and replaced with the respective value
+     if /[a-zA-Z]*/.match(expr)
+      if input.class == String
+        expr = expr.gsub(expr[/[a-zA-Z]+/], %("#{input}"))
+      elsif input.class == Array
+        input = "[#{input.join(",")}]"
+        expr = expr.gsub(/[a-zA-Z]+/,  %(#{input}))
+      else
+        expr = expr.gsub(/[a-zA-Z]+/,  %(#{input}))
+      end 
+     end 
+
+     puts "Evaluate " + expr
+
+    #finally,the expression is evaluated 
+     eval(expr)     
+     
+    end
+
     private
 
     def raise_property_error(property)
